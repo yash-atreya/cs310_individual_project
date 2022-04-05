@@ -5,6 +5,7 @@ from stopwords import stopwords
 from nltk.sentiment import SentimentIntensityAnalyzer
 from language_pairs import pairs
 from nltk.corpus import wordnet
+from tweets import get_username_from_msg, get_tweets_by_username
 
 
 def generate_token(msg):
@@ -56,6 +57,27 @@ class Botler:
 
     def generate_response(self, msg):
         # Correct any spelling mistakes
+        if(msg.startswith('tweet')):
+            username = get_username_from_msg(msg)
+            if(username != None):
+                res = get_tweets_by_username(username)
+                if(res['error'] == True):
+                    # Respond with error message
+                    return("{}".format(res['errorMsg']))
+                tweets = res['data']
+                # Check len
+                if(len(tweets) == 0):
+                    return("{} hasn't tweeted anything".format(username))
+                """Display Tweets"""
+                response = "Latest tweets from {} \n\n".format(username)
+                for tweet in tweets:
+                    # response = response.join(tweet['text'] + '\n\n')
+                    response = response + tweet['text'] + '\n\n===============\n\n'
+                    print(tweet['text'])
+                return response
+
+
+        
         clean_input = self.speller(msg)
 
         # Generate a response from the chatbot

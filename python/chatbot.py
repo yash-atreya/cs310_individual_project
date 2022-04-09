@@ -1,6 +1,7 @@
 from autocorrect import Speller
 from nltk.chat.util import Chat, reflections
 from nltk.tokenize import wordpunct_tokenize
+from translate import parse_text, translate_text
 from stopwords import stopwords
 from nltk.sentiment import SentimentIntensityAnalyzer
 from language_pairs import pairs
@@ -74,6 +75,10 @@ class Botler:
                     # response = response.join(tweet['text'] + '\n\n')
                     response = response + tweet['text'] + '\n\n===============\n\n'
                 return response
+        elif "$translate" in msg:
+            msg = parse_text(msg)
+            text = translate_text(text=msg)
+            return text
 
         
         clean_input = self.speller(msg)

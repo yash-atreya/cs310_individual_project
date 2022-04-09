@@ -14,8 +14,12 @@ def get_username_from_msg(msg):
     print("Looking for username in {}".format(msg))
     text_tokens = wordpunct_tokenize(msg)
     tokens_without_sw = [word for word in text_tokens if not word in stopwords]
+    index = tokens_without_sw.index('tweets')
+    if(index == len(tokens_without_sw) - 1):
+        print("No username found, please provide username in this format $tweets <username>")
+        return None
     try:
-        username = tokens_without_sw[1]
+        username = tokens_without_sw[index + 1]
     except:
         print("Error getting username from msg")
         return None

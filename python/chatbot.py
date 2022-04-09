@@ -57,7 +57,7 @@ class Botler:
 
     def generate_response(self, msg):
         # Correct any spelling mistakes
-        if(msg.startswith('tweet')):
+        if "$tweets"  in msg:
             username = get_username_from_msg(msg)
             if(username != None):
                 res = get_tweets_by_username(username)
@@ -69,13 +69,11 @@ class Botler:
                 if(len(tweets) == 0):
                     return("{} hasn't tweeted anything".format(username))
                 """Display Tweets"""
-                response = "Latest tweets from {} \n\n".format(username)
+                response = "Here are the latest tweets from @{} \n\n".format(username)
                 for tweet in tweets:
                     # response = response.join(tweet['text'] + '\n\n')
                     response = response + tweet['text'] + '\n\n===============\n\n'
-                    print(tweet['text'])
                 return response
-
 
         
         clean_input = self.speller(msg)

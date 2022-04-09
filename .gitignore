@@ -3,6 +3,7 @@ Temp.text
 
 # API Keys
 twitter_keys.txt
+serviceAccount-chat-bot.json
 # General
 .DS_Store
 .AppleDouble

@@ -54,8 +54,8 @@ def bearer_oauth(r):
     """
     Method required by bearer token authentication.
     """
-
-    r.headers["Authorization"] = "Bearer AAAAAAAAAAAAAAAAAAAAAHuqbAEAAAAAweiYQnw9D6f7XlCEqTe41UJsTIo%3D1GlWzA530UvPxoYy0BBCqOP6nycQ94mf4F96LYmNmfD5zWegUN"
+    
+    r.headers["Authorization"] = "Bearer {}".format(bearer_token)
     r.headers["User-Agent"] = "v2UserTweetsPython"
     return r
 

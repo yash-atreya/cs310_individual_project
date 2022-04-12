@@ -81,7 +81,7 @@ def get_tweets_by_username(username):
     except: 
         res_dict['error'] = True
         res_dict['data'] = None
-        res_dict['errorMsg'] = "Unable to fetch user_id"
+        res_dict['errorMsg'] = "User does not exist"
         return res_dict
     else:
         url = create_url(user_id)

@@ -1,24 +1,45 @@
-from operator import index
 from google.cloud import translate
 from nltk.tokenize import wordpunct_tokenize
-from stopwords import stopwords
 
+# Language codes: https://cloud.google.com/translate/docs/languages
 def parse_text(msg: str):
-    # text_tokens = wordpunct_tokenize(msg)
-    # tokens_without_sw = [word for word in text_tokens if not word in stopwords]
-    # index = tokens_without_sw.index('translate')
-    # if(index == len(tokens_without_sw) - 1):
-    #     print("No text found to translate, please provide text in this format $translate <text>")
-    #     return None
-    # full_text = "".join(tokens_without_sw[index + 1:])
-    # print("FULL_TEXT {}".format(full_text));
-    msg = msg.replace("$translate", "")
-    return msg
+    res_dict = {}
+    res_dict['error'] = False
+    res_dict['content'] = ""
+    res_dict['errorMsg'] = ""
+    try:
+        msg = msg.replace("$translate", "")
+        print("Removed $translate: {}".format(msg))
+        fromIndex = msg.index("$from")
+        content = msg[0:fromIndex]
+        print("Content: {}".format(content))
+        msg = msg.replace(content, "")
+        print("Removed content: {}".format(msg))
+        tokens = wordpunct_tokenize(msg)
+        print("Tokens: {}".format(tokens))
+        tokens.remove("$")
+        fromLang = "".join(tokens[tokens.index("from") + 1: tokens.index("$")])
+        print("From lang: {}".format(fromLang))
+        tokens = tokens[tokens.index("$") + 1:]
+        print("Tokens: {}".format(tokens))
+        toLang = "".join(tokens[tokens.index("to") + 1:])
+        print("To lang: {}".format(toLang))
+        res_dict['content'] = content
+        res_dict['fromLang'] = fromLang
+        res_dict['toLang'] = toLang
+        return res_dict
+    except:
+        res_dict['error'] = True
+        res_dict['errorMsg'] = "Error parsing text: make sure you are strictly following the format: $translate <content> $from <language code> $to <language code>"
+        return res_dict
+    
 
 
 
 
-def translate_text(text="Hello, world!", project_id="cs310-chat-bot"):
+
+
+def translate_text(text="Hello, world!", project_id="cs310-chat-bot", from_lang="en-us", to_lang="es"):
 
     client = translate.TranslationServiceClient()
     location = "global"
@@ -28,8 +49,8 @@ def translate_text(text="Hello, world!", project_id="cs310-chat-bot"):
                 "parent": parent,
                 "contents": [text],
                 "mime_type": "text/plain",
-                "source_language_code": "en-US",
-                "target_language_code": "es",
+                "source_language_code": from_lang,
+                "target_language_code": to_lang,
             }
     )
 
@@ -40,4 +61,3 @@ def translate_text(text="Hello, world!", project_id="cs310-chat-bot"):
     
     return translated_text
 
-translate_text()

@@ -76,36 +76,38 @@ class Botler:
                     response = response + tweet['text'] + '\n\n===============\n\n'
                 return response
         elif "$translate" in msg:
-            msg = parse_text(msg)
-            text = translate_text(text=msg)
-            return text
-
-        
-        clean_input = self.speller(msg)
-
-        # Generate a response from the chatbot
-        response = self.chat.respond(clean_input)
-
-        # If response is still none, tokenize words and try again
-        if not response:
-            tokens_without_sw = generate_token(clean_input)
-            response = self.chat.respond(tokens_without_sw)
-        
-        #if not response:
-        if not response:
-            response = self.chat.respond(Detect_Synonym(clean_input))
-
-        # Getting sia_value to hold the dictionary from polarity_scores
-        sia_value = self.sentiment_analyzer.polarity_scores(clean_input) 
-
-        # sia_value['compound'] holds overall sentiment. 
-
-        if response:
-            return response
-        elif sia_value['compound'] <= -0.5:
-            return("I'm sorry you feel that way, but I am\nunable to fix this for you.\nPlease ask something different.")
-        elif sia_value['compound'] >= 0.5:
-            return("I'm happy to hear that sir,\nalthough I don't quite know what to do with that\ninformation.\nWould you mind asking something else?")
+            parse_text_res = parse_text(msg)
+            if(parse_text_res['error'] != True):
+                text = translate_text(text=parse_text_res['content'], from_lang=parse_text_res['fromLang'], to_lang=parse_text_res['toLang'])
+                return text
+            else:
+                return parse_text_res['errorMsg']
         else:
-            return("I didn't quite hear that sir,\nwould you mind repeating that?")
+            clean_input = self.speller(msg)
+
+            # Generate a response from the chatbot
+            response = self.chat.respond(clean_input)
+
+            # If response is still none, tokenize words and try again
+            if not response:
+                tokens_without_sw = generate_token(clean_input)
+                response = self.chat.respond(tokens_without_sw)
+            
+            #if not response:
+            if not response:
+                response = self.chat.respond(Detect_Synonym(clean_input))
+
+            # Getting sia_value to hold the dictionary from polarity_scores
+            sia_value = self.sentiment_analyzer.polarity_scores(clean_input) 
+
+            # sia_value['compound'] holds overall sentiment. 
+
+            if response:
+                return response
+            elif sia_value['compound'] <= -0.5:
+                return("I'm sorry you feel that way, but I am\nunable to fix this for you.\nPlease ask something different.")
+            elif sia_value['compound'] >= 0.5:
+                return("I'm happy to hear that sir,\nalthough I don't quite know what to do with that\ninformation.\nWould you mind asking something else?")
+            else:
+                return("I didn't quite hear that sir,\nwould you mind repeating that?")
         

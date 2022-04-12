@@ -88,6 +88,7 @@ def get_tweets_by_username(username):
         params = get_params()
         try: 
             json_response = connect_to_endpoint(url, params)
+            print(json.dumps(json_response, indent=4, sort_keys=True))
         except:
             res_dict['error'] = True
             res_dict['data'] = None
@@ -95,7 +96,7 @@ def get_tweets_by_username(username):
             return res_dict
         else:
             res_dict['error'] = False
-            res_dict['data'] = json_response['data']
+            res_dict['data'] = json_response['data'] if json_response['meta']['result_count'] > 0 else None
             res_dict['errorMsg'] = None
             return res_dict
 

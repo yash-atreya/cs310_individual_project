@@ -67,7 +67,7 @@ class Botler:
                     return("{}".format(res['errorMsg']))
                 tweets = res['data']
                 # Check len
-                if(len(tweets) == 0):
+                if(tweets == None):
                     return("{} hasn't tweeted anything".format(username))
                 """Display Tweets"""
                 response = "Here are the latest tweets from @{} \n\n".format(username)

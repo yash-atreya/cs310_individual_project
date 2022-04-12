@@ -32,11 +32,6 @@ def parse_text(msg: str):
         res_dict['error'] = True
         res_dict['errorMsg'] = "Error parsing text: make sure you are strictly following the format: $translate <content> $from <language code> $to <language code>"
         return res_dict
-    
-
-
-
-
 
 
 def translate_text(text="Hello, world!", project_id="cs310-chat-bot", from_lang="en-us", to_lang="es"):

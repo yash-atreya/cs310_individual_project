@@ -11,54 +11,94 @@ You can find a list of the features and improvements in A3 [here](#a3-features-a
 
 The MIT liscence is in this same direcory and is named <a href="https://github.com/Software-Engineering-Group-4-Maamy/chat-bot/blob/main/LICENSE" target="_blank">LICENSE</a>.
 
-## Instalation guide
+## Installation guide
 1. First, install <a href="https://pip.pypa.io/en/stable/installation/">pip</a> if you have not already
-2. Run `pip install --user -U nltk`
-3. Then, clone this git reposotory, or download the zip file. 
-4. Inside the python directory, run the main.py file `python main.py`
+2. Clone this git repository, or download the zip file.
+3. Run `pip3 install nltk google-cloud-translate requests`
+4. Inside the python directory, run the main.py file `python3 main.py`
 5. Vouala - you now own a human soul.
+
+## Integrated API's
+
+1. [Google Translate API](https://cloud.google.com/translate)
+
+Using the Google Translate API, we can translate text from one language to another.
+
+Usage:
+
+``` $translate <text> $from <language code> $to <language code> ```
+
+Language codes can be found [here](https://cloud.google.com/translate/docs/languages).
+
+Example Output:
+
+![Translate Example](./python/translate_example.png)
+
+Integration steps:
+
+- [Create](https://console.cloud.google.com/projectcreate) a Google Cloud Platform project.
+
+![Create Project](./python/gcp_create_proj.png)
+
+- [Enable](https://console.cloud.google.com/translation/introduction) the translation API.
+
+![Enable API](./python/gcp_enable.png)
+
+- [Create a service account](https://console.cloud.google.com/iam-admin/serviceaccounts/create) like ```serviceAccount-chat-bot.json```, and give it the role: ```Translation API user```. This file should not be commited as it contains various security credentials.
+
+![Create Service Account](./python/gcp_create_sa.png)
+
+- Edit the project_id parameter in ```translate_text() fn``` in ```translate.py``` to match the project ID of your project.
+
+        translate_text(text, project_id="your-project-id", from_lang, to_lang)
+
+- Lastly, link set the ```GOOGLE_APPLICATION_CREDENTIALS``` environment variable to the service account file like this:
+
+        $export GOOGLE_APPLICATION_CREDENTIALS=./../serviceAccount-chat-bot.json
+
+- ```parse_text()``` parses the incoming message string to get the content to trasnlate, and the languages to translate from and to.
+
+- ```translate_text()``` creates a translation client using ```google-cloud-translate``` lib and sends a request to the API, and finally concatenates the response.
+
+2. [Twitter API](https://developer.twitter.com/)
+
+Using the twitter API, we can get the most recent tweets from a user.
+
+Usage:
+
+``` $tweets <username> ```
+
+Example Output:
+
+![Tweets Example](./python/tweets_example.png)
+
+Integration steps:
+
+- [Create](https://developer.twitter.com/en/portal/apps/new) a new twitter developer app
+
+![Twitter App Creation](./python/twitter_create_app.png)
+
+- Retrieve the keys and tokens for the app and store them in a file called ```twitter_keys.txt```. I saved it in the parent directory. This file should not be commited as it contains various security credentials.
+
+![Twitter App Keys](./python/twitter_key_tokens.png)
+
+- Set the ```BEARER_TOKEN``` environment variable like this.
+
+        $export BEARER_TOKEN=<your bearer token>
+
+- I have used the ```https://api.twitter.com/2/users/:id/tweets``` [endpoint](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/quick-start) in ```get_tweets_by_username() fn``` to retreive the latest tweets from a user. In order to do that I first get the user id from the ``` https://api.twitter.com/2/users/by/username/:username ``` [endpoint](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by-username-username) in the ```get_user_id() fn```.
 
 ## Sample output
 
-A2: Terminal Conversation Flow
+Standard Conversation Flow:
 
-        B:Hi, I'm Botler want to have a conversation with you!
-        B:Please speak to me in lowercase English. Type quit if you wish to end this conversation. 
-        U:hello
-        B:Greetings!
-        U:my name is Matthew
-        B:Hello matthew, How are you feeling today?
-        U:I am a bit concerned about this recent stock market fiasco
-        B:Do not be alarmed sir, I've handled your investments accordingly
-        U:sorry for ever doubting you
-        B:You needn't worry at all
-        U:can you find the next best stock for me
-        B:I am unable to search for the next best stock, for now.
-        U:sorry for expecting so much
-        B:You needn't worry at all
-        U:have you seen my underwear?
-        B:I believe you left it under your bed again sir
-        U:I like underwear  
-        B:Exquisite taste sir
-        U:i am not a sir
-        B:Apologies, but sir it is the best I can do.
-        U:you're being difficult
-        B:You literally programed me, I can only say what you allowed me to say
-        U:i love you botler, and you have to love me back
-        B:That is sweet sir, but I only think of you as a an aquaintence
-        U:that was mean
-        B:I am doing my best to be polite, you are just making it difficult
-        U:yes    
-        B:Glad we agree
-        U:sorry botler, i was argumentative
-        B:It is already forgiven.
-        U:can you make me happy
-        B:Of course, sire, I will get you happy but first I'll need milk, brb
-        U:how long will it take you to make me happy
-        B:I cannot say, an hour, a week maybe a decade.  You must find it in yourself to wait
-        U:quit
-        B:Thank you for chatting with me
-	
+![GUI Image](./python/demo_ss.png)
+
+
+---
+
+## A3
+
 ## A3: Git Commit Graph
 
 ![Git Commit Graph](./python/CommitGraphA3.png)
@@ -73,9 +113,6 @@ A2: Terminal Conversation Flow
 
 ![DFD Level 0](./python/DFDLevel1.png)
 
-Improved A3: GUI Conversation Flow
-
-![GUI Image](./python/demo_ss.png)
 
 As you can see, we can now handle upper case but also mixed case.
 ### Errors in output

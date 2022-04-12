@@ -6,6 +6,8 @@ Software Engineering Term 2, 2022
 
 [Demo Video](https://youtu.be/Piamnn-7P4w)
 
+[Repository](https://github.com/yash-atreya/cs310_individual_project)
+
 My group had decided to create a chatbot using python. We have used the <a href="https://www.nltk.org/" target="_blank">***NLTK***</a> python Library in order to create our chatbot. The bot will be taking the role of a sassy, well educated, butler with a good scence of humour, meanwhile the user will take the role of its master.
 
 In my individual project, I extend the capabilities of the chatbot by integrating the Twitter API and Google Cloud Translation API. The bot can now retrieve the latest tweets by username and also translate any text from one language to another.
